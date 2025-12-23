@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:uuid/uuid.dart';
 import '../../models/grocery.dart';
 
 class NewItem extends StatefulWidget {
@@ -47,6 +47,8 @@ class _NewItemState extends State<NewItem> {
 
   void onAdd() {
     // Will be implemented later - Create and return the new grocery
+    Grocery newGrocery = Grocery(id: Uuid().v4(), name: _nameController.text, quantity: int.parse(_quantityController.text), category: _selectedCategory);
+    Navigator.of(context).pop(newGrocery);
   }
 
   @override
@@ -76,14 +78,19 @@ class _NewItemState extends State<NewItem> {
                 Expanded(
                   child: DropdownButtonFormField<GroceryCategory>(
                     initialValue: _selectedCategory,
-                    items: [  ],
-                    onChanged: (value) {
+                    onChanged: (GroceryCategory? value) {
                       if (value != null) {
                         setState(() {
                           _selectedCategory = value;
                         });
                       }
                     },
+                    items: GroceryCategory.values.map<DropdownMenuItem<GroceryCategory>>((GroceryCategory value){
+                      return DropdownMenuItem<GroceryCategory>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
                   ),
                 ),
               ],
